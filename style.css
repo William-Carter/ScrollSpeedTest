@@ -1,3 +1,16 @@
+/* Color coding for Inputs/sec */
+.ips-green {
+  color: #1db954;
+  font-weight: bold;
+}
+.ips-yellow {
+  color: #ffd600;
+  font-weight: bold;
+}
+.ips-red {
+  color: #e53935;
+  font-weight: bold;
+}
 body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
