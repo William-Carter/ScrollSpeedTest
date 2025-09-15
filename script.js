@@ -95,13 +95,22 @@ function updateDisplay() {
       const min = item.timestamps[0];
       const max = item.timestamps[item.timestamps.length - 1];
       const range = max - min || 1;
-      distribution = '<div style="position:relative;width:120px;height:16px;background:#eee;border-radius:8px;overflow:hidden;display:inline-block;">';
+  distribution = '<div style="position:relative;width:240px;height:16px;background:#eee;border-radius:8px;overflow:hidden;display:inline-block;">';
       const leftPad = 6; // px, gap from left
+
+      // Add vertical dividers every 0.015s (15ms)
+      const interval = 15; // ms
+      for (let t = min + interval; t < max; t += interval) {
+        const left = ((t - min) / range) * 100;
+        distribution += `<span style='position:absolute;left:${left}%;top:0;width:2px;height:100%;background:#bbb;opacity:0.7;z-index:0;'></span>`;
+      }
+
+      // Add scroll dots
       item.timestamps.forEach((ts, i) => {
         const left = ((ts - min) / range) * 100;
         const style = i === 0
-          ? `position:absolute;left:calc(${left}% + ${leftPad}px);top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;`
-          : `position:absolute;left:${left}%;top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;`;
+          ? `position:absolute;left:calc(${left}% + ${leftPad}px);top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;z-index:1;`
+          : `position:absolute;left:${left}%;top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;z-index:1;`;
         distribution += `<span style='${style}'></span>`;
       });
       distribution += '</div>';
