@@ -92,25 +92,41 @@ function updateDisplay() {
     // Visual distribution bar for scrolls
     let distribution = '';
     if (item.timestamps && item.timestamps.length > 1) {
-      const min = item.timestamps[0];
-      const max = item.timestamps[item.timestamps.length - 1];
-      const range = max - min || 1;
-  distribution = '<div style="position:relative;width:240px;height:16px;background:#eee;border-radius:8px;overflow:hidden;display:inline-block;">';
-      const leftPad = 6; // px, gap from left
+    const min = item.timestamps[0];
+    const max = item.timestamps[item.timestamps.length - 1];
+    const range = max - min || 1;
+    const barWidth = 240;
+  const dotRadius = 4; // px (for 8px dot)
+  const leftPad = dotRadius + 2; // px, gap from left
+  const rightPad = dotRadius + 12; // px, increased gap from right for breathing room
+    distribution = `<div style="position:relative;width:${barWidth}px;height:16px;background:#eee;border-radius:8px;overflow:hidden;display:inline-block;">`;
+
+      // Section coloring logic
+      const interval = 15; // ms
+      const sectionCount = Math.ceil((max - min) / interval);
+      for (let s = 0; s < sectionCount; s++) {
+        const sectionStart = min + s * interval;
+        const sectionEnd = sectionStart + interval;
+        // Check if any scroll input lands within this section
+        const hasScroll = item.timestamps.some(ts => ts >= sectionStart && ts < sectionEnd);
+        if (hasScroll) {
+          // Color the section background
+          const left = leftPad + ((sectionStart - min) / range) * (barWidth - leftPad - rightPad);
+          const width = (interval / range) * (barWidth - leftPad - rightPad);
+          distribution += `<span style='position:absolute;left:${left}px;top:0;width:${width}px;height:100%;background:#b3e5fc;opacity:0.5;z-index:0;'></span>`;
+        }
+      }
 
       // Add vertical dividers every 0.015s (15ms)
-      const interval = 15; // ms
-      for (let t = min + interval; t < max; t += interval) {
-        const left = ((t - min) / range) * 100;
-        distribution += `<span style='position:absolute;left:${left}%;top:0;width:2px;height:100%;background:#bbb;opacity:0.7;z-index:0;'></span>`;
+      for (let t = min + interval; t <= max; t += interval) {
+        const left = leftPad + ((t - min) / range) * (barWidth - leftPad - rightPad);
+        distribution += `<span style='position:absolute;left:${left}px;top:0;width:2px;height:100%;background:#bbb;opacity:0.7;z-index:1;'></span>`;
       }
 
       // Add scroll dots
-      item.timestamps.forEach((ts, i) => {
-        const left = ((ts - min) / range) * 100;
-        const style = i === 0
-          ? `position:absolute;left:calc(${left}% + ${leftPad}px);top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;z-index:1;`
-          : `position:absolute;left:${left}%;top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;z-index:1;`;
+      item.timestamps.forEach((ts) => {
+        const left = leftPad + ((ts - min) / range) * (barWidth - leftPad - rightPad);
+        const style = `position:absolute;left:${left}px;top:3px;width:8px;height:8px;background:#333;border-radius:50%;display:block;z-index:2;`;
         distribution += `<span style='${style}'></span>`;
       });
       distribution += '</div>';
