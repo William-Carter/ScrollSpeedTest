@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll Speed Test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Scroll Speed Test</h1>
+    <p>Scroll anywhere on this page. The app will count your scroll inputs and measure your scroll speed.</p>
+    <div class="results">
+      <div>Total Scrolls: <span id="scrollCount">0</span></div>
+    <div>Scroll Inputs in Scroll: <span id="inputsInScroll">0</span></div>
+    <div>Scroll Duration (ms): <span id="scrollDuration">0</span></div>
+    <div>Inputs per Second: <span id="inputsPerSecond">0.00</span></div>
+    <div>Average Inputs per Second: <span id="avgInputsPerSecond">0.00</span></div>
+  </div>
+  <div class="history">
+    <h2>Scroll History</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Inputs</th>
+          <th>Duration (ms)</th>
+          <th>Inputs/sec</th>
+        </tr>
+      </thead>
+      <tbody id="scrollHistory"></tbody>
+    </table>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
